@@ -18,6 +18,11 @@
                         {{ session('error') }}
                     </div>
                 @endif
+                @error('quantity')
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ $message }}
+                    </div>
+                @enderror
 
                 <table class="table table-striped">
                     <thead>
@@ -61,6 +66,7 @@
                         <th scope="col">Stock</th>
                         <th scope="col">Status</th>
                         <th scope="col">Description</th>
+                        <th scope="col"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -81,6 +87,19 @@
                                     @endif
                                 </td>
                                 <td>{{$product->description}}</td>
+                                <td>
+                                    @if (Session::get('user')->data->level == 'C' && $product->stock > 0)
+                                        <form method="POST" action="{{url('/payment/add') }}" style="display: inline-block;">
+                                            @csrf
+                                            <input name="shop" type="hidden" value="{{$product->shop->pk}}">
+                                            <input name="product" type="hidden" value="{{$product->pk}}">
+                                            <input name="price" type="hidden" value="{{$product->price}}">
+                                            <input name="user" type="hidden" value="{{Session::get('user')->data->pk}}">
+                                            <input name="quantity" type="number" required>
+                                            <button type="submit" class="btn btn-sm btn-success"> Buy</button>
+                                        </form>
+                                    @endif
+                                </td>
                             </tr>
                         @endif
                     @endforeach

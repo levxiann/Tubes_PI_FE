@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
@@ -99,3 +100,21 @@ Route::get('/user/editemployee/{id}', [UserController::class, 'edit_em']);
 Route::patch('/user/editemployee/{id}', [UserController::class, 'update_em']);
 
 Route::delete('/user/deleteemployee/{id}', [UserController::class, 'destroy_em']);
+
+Route::post('/payment/add', [PaymentController::class, 'store']);
+
+Route::get('/payment/history', [PaymentController::class, 'index']);
+
+Route::delete('/payment/delete/{id}', [PaymentController::class, 'destroy']);
+
+Route::get('/payment', [PaymentController::class, 'payment']);
+
+Route::patch('/payment/approve/{id}', [PaymentController::class, 'approve']);
+
+Route::patch('/payment/reject/{id}', [PaymentController::class, 'reject']);
+
+Route::get('/payment/report', [PaymentController::class, 'report']);
+
+Route::get('/payment/report_sa', [PaymentController::class, 'report_sa_shop']);
+
+Route::get('/payment/report_sa/{id}', [PaymentController::class, 'report_sa']);
