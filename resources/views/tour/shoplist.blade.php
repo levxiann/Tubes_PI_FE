@@ -18,8 +18,9 @@
                         {{ session('error') }}
                     </div>
                 @endif
-
+                @if (Session::get('user')->data->level == 'SA')
                 <a href="{{ url('/shop/add') }}" class="btn btn-primary mb-3">Add New Shop</a>
+                @endif
                 <table id="dataTable" class="table table-striped">
                     <thead>
                       <tr>
