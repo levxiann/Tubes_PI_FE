@@ -56,7 +56,9 @@
                         </div>
                         <div class="form-group">
                             <select name="admin" class="form-control form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                                    <option value="{{$admin->pk}}">{{$admin->username}}</option>
+                                @if ($admin)
+                                    <option value="{{$admin->pk}}">{{$admin->username}} (now)</option>
+                                @endif
                                 @foreach ($admins as $admin)
                                     <option value="{{$admin->pk}}" @if(old('admin') == $admin->pk) selected @endif>{{$admin->username}}</option>
                                 @endforeach

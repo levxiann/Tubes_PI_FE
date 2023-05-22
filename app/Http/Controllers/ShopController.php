@@ -351,6 +351,8 @@ class ShopController extends Controller
 
         if($status == 200)
         {
+            $admin = null;
+
             foreach(json_decode($response) as $key=>$value)
             {
                 if($value->user->level == 'A')
@@ -358,8 +360,40 @@ class ShopController extends Controller
                     $shop = json_decode($response)[$key]->shop;
                     $admin = json_decode($response)[$key]->user;
                     $shoppos = json_decode($response)[$key]->pk;
+                    break;
                 }
             }
+
+            if(!$admin)
+            {
+                // create a new cURL resource
+                $ch = curl_init();
+
+                // set the URL and other options
+                curl_setopt($ch, CURLOPT_URL, "http://localhost:8000/tourdest/shop/".$id."/");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // return the response as a string
+
+                // set the headers
+                $headers = array(
+                    'Content-Type: application/json', // specify the content type as JSON
+                    'Authorization: Token '. $user->token
+                );
+
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                // execute the request and get the response
+                $response = curl_exec($ch);
+
+                $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                // close the cURL resource
+                curl_close($ch);
+
+                $shop = json_decode($response);
+                $shoppos = null;
+                $admin = null;
+            }
+
             if($user->data->level == 'SA')
             {
                 // create a new cURL resource
@@ -467,39 +501,78 @@ class ShopController extends Controller
         if($status == 200)
         {
             $shop = json_decode($response);
-            // create a new cURL resource
-            $ch = curl_init();
 
-            // set the URL and other options
-            curl_setopt($ch, CURLOPT_URL, "http://localhost:8000/tourdest/shoppos/".$request->shoppos.'/');
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT"); // set PUT method
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // return the response as a string
+            if($request->shoppos)
+            {
+                // create a new cURL resource
+                $ch = curl_init();
 
-            // set the headers
-            $headers = array(
-                'Content-Type: application/json', // specify the content type as JSON
-                'Authorization: Token '.$user->token
-            );
+                // set the URL and other options
+                curl_setopt($ch, CURLOPT_URL, "http://localhost:8000/tourdest/shoppos/".$request->shoppos.'/');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT"); // set PUT method
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // return the response as a string
 
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                // set the headers
+                $headers = array(
+                    'Content-Type: application/json', // specify the content type as JSON
+                    'Authorization: Token '.$user->token
+                );
 
-            // set the data to send in the request body
-            $data = array(
-                'user_id_input' => $request->admin,
-                'shop' => $shop->pk,
-            );
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // encode the data as JSON
+                // set the data to send in the request body
+                $data = array(
+                    'user_id_input' => $request->admin,
+                    'shop' => $shop->pk,
+                );
 
-            // execute the request and get the response
-            $response = curl_exec($ch);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // encode the data as JSON
 
-            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                // execute the request and get the response
+                $response = curl_exec($ch);
 
-            // close the cURL resource
-            curl_close($ch);
+                $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-            if($status == 200)
+                // close the cURL resource
+                curl_close($ch);
+            }
+            else
+            {
+                // create a new cURL resource
+                $ch = curl_init();
+
+                // set the URL and other options
+                curl_setopt($ch, CURLOPT_URL, "http://localhost:8000/tourdest/shoppos/");
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST"); // set POST method
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // return the response as a string
+
+                // set the headers
+                $headers = array(
+                    'Content-Type: application/json', // specify the content type as JSON
+                    'Authorization: Token '.$user->token
+                );
+
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                // set the data to send in the request body
+                $data = array(
+                    'user_id_input' => $request->admin,
+                    'shop' => $shop->pk,
+                );
+
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // encode the data as JSON
+
+                // execute the request and get the response
+                $response = curl_exec($ch);
+
+                $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                // close the cURL resource
+                curl_close($ch);
+            }
+            
+
+            if($status == 200 || $status == 201)
             {
                 return redirect('/shop')->with('success', 'Toko berhasil diedit!');
             }
