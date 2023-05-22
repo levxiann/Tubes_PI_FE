@@ -342,11 +342,11 @@ class UserController extends Controller
 
         if($status == 204)
         {
-            return redirect('/user')->with('success', 'Admin berhasil dihapus!');
+            return redirect('/user')->with('success', 'User berhasil dihapus!');
         }
         else
         {
-            return redirect('/user')->with('error', 'Gagal menghapus admin!');
+            return redirect('/user')->with('error', 'Gagal menghapus user!');
         }
     }
 
@@ -516,11 +516,11 @@ class UserController extends Controller
 
         if($status == 200)
         {
-            return redirect('/user')->with('success', 'Admin berhasil diedit!');
+            return redirect('/user')->with('success', 'User berhasil diedit!');
         }
         else
         {
-            return redirect('/user')->with('error', 'Gagal mengedit admin! Pastikan menggunakan username, email, dan no. telp. yang unik!');
+            return redirect('/user')->with('error', 'Gagal mengedit user! Pastikan menggunakan username, email, dan no. telp. yang unik!');
         }
     }
 
