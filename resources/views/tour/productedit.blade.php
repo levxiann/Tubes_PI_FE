@@ -64,7 +64,7 @@
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                            Add
+                            Edit
                         </button>
                 </form>
 

@@ -19,4 +19,4 @@
     <link href="{{asset('assets/css/sb-admin-2.min.css')}}" rel="stylesheet">
 
 </head>
-<body>
+<body style="background-image: url('{{asset('assets/img/bg_danautoba.png')}}'); background-size: 2000px 1300px">
